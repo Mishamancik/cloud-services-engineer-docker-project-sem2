@@ -1,0 +1,27 @@
+# binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# dependencies
+vendor/
+
+# IDE
+.vscode/
+.idea/
+.git
+
+# OS
+.DS_Store
+
+# archives and logs
+*.tgz
+*.zip
+*.log
+
+# Dockerfile itself is not necessary inside image
+Dockerfile
