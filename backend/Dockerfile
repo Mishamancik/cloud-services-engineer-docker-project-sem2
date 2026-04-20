@@ -15,10 +15,8 @@ RUN go build -o main ./cmd/api
 # Runtime stage
 FROM alpine:latest
 
-#TODO: Проверить необходимость установки ca-certificates
 RUN addgroup -S momo -g 1000 \
- && adduser -S -G momo -u 1000 momo \
- && apk --no-cache add ca-certificates
+ && adduser -S -G momo -u 1000 momo
 
 WORKDIR /app
 
