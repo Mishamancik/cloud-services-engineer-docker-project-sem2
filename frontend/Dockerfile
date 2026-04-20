@@ -34,3 +34,6 @@ EXPOSE 80
 USER momo
 
 CMD ["nginx", "-g", "daemon off;"]
+
+HEALTHCHECK --interval=30s --timeout=3s --retries=2 \
+  CMD curl -f http://localhost/momo-store/
