@@ -11,6 +11,7 @@ services:
       - "8081"
     networks:
       - momo-network
+      - backend
 
   frontend:
     build:
@@ -28,7 +29,15 @@ services:
       - "8080:80"
     networks:
       - momo-network
+      - frontend
 
 networks:
   momo-network:
     driver: bridge
+    internal: true
+  frontend:
+    driver: bridge
+    internal: true
+  backend:
+    driver: bridge
+    internal: true
