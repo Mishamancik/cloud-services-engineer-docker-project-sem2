@@ -23,7 +23,8 @@ services:
         - momo-frontend:1.0.0
         - momo-frontend:latest
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     restart: unless-stopped
     ports:
       - "8080:80"

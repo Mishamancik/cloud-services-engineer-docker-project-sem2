@@ -28,5 +28,5 @@ USER momo
 
 CMD ["./main"]
 
-HEALTHCHECK --interval=30s --timeout=3s --retries=2 \
+HEALTHCHECK --start-period=10s --interval=30s --timeout=3s --retries=2 \
   CMD wget -O- http://localhost:8081/health
