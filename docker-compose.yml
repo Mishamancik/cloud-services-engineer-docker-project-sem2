@@ -35,7 +35,6 @@ services:
 networks:
   momo-network:
     driver: bridge
-    internal: true
   frontend:
     driver: bridge
     internal: true
