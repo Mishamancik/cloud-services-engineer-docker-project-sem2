@@ -17,3 +17,6 @@ vendor/
 .vscode/
 .DS_Store
 *.tgz
+
+# env file that helps keeping track of environment variables locally
+.env

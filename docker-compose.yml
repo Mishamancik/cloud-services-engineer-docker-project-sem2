@@ -4,7 +4,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
       tags:
-        - momo-backend:1.0.0
+        - momo-backend:${MOMO_BACKEND_VERSION:-recent}
         - momo-backend:latest
     restart: unless-stopped
     expose:
@@ -18,9 +18,9 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        VUE_APP_API_URL: /api
+        VUE_APP_API_URL: ${VUE_APP_API_URL:-/api}
       tags:
-        - momo-frontend:1.0.0
+        - momo-frontend:${MOMO_FRONTEND_VERSION:-recent}
         - momo-frontend:latest
     depends_on:
       backend:
