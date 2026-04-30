@@ -17,7 +17,7 @@ RUN npm run build
 
 
 # Runtime stage
-FROM nginx:alpine
+FROM nginx:alpine-slim
 
 RUN addgroup -S momo -g 1000 \
  && adduser -S -G momo -u 1000 momo \
