@@ -12,6 +12,10 @@ services:
       - backend
     volumes:
       - backend:/app
+    cpus: 0.5
+    mem_limit: 512m
+    mem_reservation: 256m
+    memswap_limit: 512m # Когда memswap_limit == mem_limit, использование swap запрещено
 
   frontend:
     build:
@@ -31,6 +35,10 @@ services:
       - frontend
     volumes:
       - frontend:/usr/share
+    cpus: 0.5
+    mem_limit: 512m
+    mem_reservation: 256m
+    memswap_limit: 512m
 
 networks:
   main_network:
