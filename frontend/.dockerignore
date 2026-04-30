@@ -17,3 +17,6 @@ dist
 
 # Dockerfile itself is not necessary inside image
 Dockerfile
+
+# We don't want to accidentally include env file with sensetive info
+*.env*
