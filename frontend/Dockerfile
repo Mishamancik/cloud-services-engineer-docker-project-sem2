@@ -21,7 +21,7 @@ FROM nginx:alpine
 
 RUN addgroup -S momo -g 1000 \
  && adduser -S -G momo -u 1000 momo \
- && mkdir -p /var/cache/nginx /var/run /var/log/nginx /run \
+ && mkdir -p /var/cache/nginx /var/run /var/log/nginx /usr/share/nginx/html /run \
  && chown -R momo:momo /var/cache/nginx /var/run /var/log/nginx /usr/share/nginx/html /run \
  && rm -rf /usr/share/nginx/html/*
 

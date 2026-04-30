@@ -15,10 +15,11 @@ RUN go build -o main ./cmd/api
 # Runtime stage
 FROM alpine:latest
 
-RUN addgroup -S momo -g 1000 \
- && adduser -S -G momo -u 1000 momo
-
 WORKDIR /app
+
+RUN addgroup -S momo -g 1000 \
+ && adduser -S -G momo -u 1000 momo \
+ && chown momo:momo /app
 
 COPY --from=builder --chown=momo:momo /app/main .
 
