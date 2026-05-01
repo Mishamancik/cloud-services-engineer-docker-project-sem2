@@ -1,5 +1,9 @@
+# Default values for arguments
+ARG GOLANG_DOCKER_IMAGE_VERSION=golang:1.17-alpine
+
+
 # Builder stage
-FROM golang:1.17-alpine AS builder
+FROM ${GOLANG_DOCKER_IMAGE_VERSION} AS builder
 
 WORKDIR /app
 
