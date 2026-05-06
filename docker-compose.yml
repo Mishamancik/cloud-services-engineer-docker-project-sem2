@@ -19,6 +19,10 @@ services:
     mem_limit: 512m
     mem_reservation: 256m
     memswap_limit: 512m # Когда memswap_limit == mem_limit, использование swap запрещено
+    cap_drop: 
+      - ALL
+    security_opt:
+      - no-new-privileges:true
 
   frontend:
     build:
@@ -44,6 +48,10 @@ services:
     mem_limit: 512m
     mem_reservation: 256m
     memswap_limit: 512m
+    cap_drop: 
+      - ALL
+    security_opt:
+      - no-new-privileges:true
 
 networks:
   main_network:
