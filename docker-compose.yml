@@ -57,3 +57,7 @@ networks:
 volumes:
   backend:
   frontend:
+
+secrets:
+  db_connection:
+    file: ./db_connection_secret_example
