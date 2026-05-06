@@ -6,15 +6,15 @@ services:
       args:
         GOLANG_DOCKER_IMAGE_VERSION: ${GOLANG_DOCKER_IMAGE_VERSION:-golang:1.26-alpine}
     image: momo-backend:${MOMO_BACKEND_VERSION:-recent}
-    read_only: true
     restart: unless-stopped
     expose:
       - "8081"
     networks:
       - main_network
       - backend
+    read_only: true
     volumes:
-      - backend:/app
+      - backend:/example_volume
     cpus: 0.5
     mem_limit: 512m
     mem_reservation: 256m
@@ -42,8 +42,9 @@ services:
     networks:
       - main_network
       - frontend
+    read_only: false
     volumes:
-      - frontend:/usr/share
+      - frontend:/example_volume
     cpus: 0.5
     mem_limit: 512m
     mem_reservation: 256m
