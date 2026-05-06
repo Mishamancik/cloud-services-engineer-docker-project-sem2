@@ -3,6 +3,8 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+      args:
+        GOLANG_DOCKER_IMAGE_VERSION: ${GOLANG_DOCKER_IMAGE_VERSION:-golang:1.26-alpine}
     image: momo-backend:${MOMO_BACKEND_VERSION:-recent}
     restart: unless-stopped
     expose:
@@ -23,6 +25,8 @@ services:
       dockerfile: Dockerfile
       args:
         VUE_APP_API_URL: ${VUE_APP_API_URL:-/api}
+        NGINX_DOCKER_IMAGE_VERSION: ${NGINX_DOCKER_IMAGE_VERSION:-nginx:alpine-slim}
+        NODE_DOCKER_IMAGE_VERSION: ${NODE_DOCKER_IMAGE_VERSION:-node:16-alpine}
     image: momo-frontend:${MOMO_FRONTEND_VERSION:-recent}
     depends_on:
       backend:
