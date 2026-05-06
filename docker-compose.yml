@@ -6,6 +6,7 @@ services:
       args:
         GOLANG_DOCKER_IMAGE_VERSION: ${GOLANG_DOCKER_IMAGE_VERSION:-golang:1.26-alpine}
     image: momo-backend:${MOMO_BACKEND_VERSION:-recent}
+    read_only: true
     restart: unless-stopped
     expose:
       - "8081"
