@@ -21,9 +21,9 @@ Report Summary
 ┌────────────────────────────────────┬──────────┬─────────────────┬─────────┐
 │               Target               │   Type   │ Vulnerabilities │ Secrets │
 ├────────────────────────────────────┼──────────┼─────────────────┼─────────┤
-│ momo-backend:4.0.1 (alpine 3.23.4) │  alpine  │        0        │    -    │
+│ momo-backend:1.0.1 (alpine 3.23.4) │  alpine  │        0        │    -    │
 ├────────────────────────────────────┼──────────┼─────────────────┼─────────┤
-│ app/main                           │ gobinary │       79        │    -    │
+│ app/main                           │ gobinary │        3        │    -    │
 └────────────────────────────────────┴──────────┴─────────────────┴─────────┘
 Legend:
 - '-': Not scanned
@@ -32,7 +32,7 @@ Legend:
 
 app/main (gobinary)
 ===================
-Total: 79 (UNKNOWN: 0, LOW: 1, MEDIUM: 44, HIGH: 30, CRITICAL: 4)
+Total: 3 (UNKNOWN: 0, LOW: 0, MEDIUM: 3, HIGH: 0, CRITICAL: 0)
 ```
 
 Frontend
@@ -42,7 +42,7 @@ Report Summary
 ┌─────────────────────────────────────┬────────┬─────────────────┬─────────┐
 │               Target                │  Type  │ Vulnerabilities │ Secrets │
 ├─────────────────────────────────────┼────────┼─────────────────┼─────────┤
-│ momo-frontend:4.0.2 (alpine 3.23.4) │ alpine │        0        │    -    │
+│ momo-frontend:1.0.2 (alpine 3.23.4) │ alpine │        0        │    -    │
 └─────────────────────────────────────┴────────┴─────────────────┴─────────┘
 Legend:
 - '-': Not scanned
