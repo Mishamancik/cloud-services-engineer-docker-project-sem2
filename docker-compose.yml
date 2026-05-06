@@ -1,0 +1,59 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      args:
+        GOLANG_DOCKER_IMAGE_VERSION: ${GOLANG_DOCKER_IMAGE_VERSION:-golang:1.26-alpine}
+    image: momo-backend:${MOMO_BACKEND_VERSION:-recent}
+    restart: unless-stopped
+    expose:
+      - "8081"
+    networks:
+      - main_network
+      - backend
+    volumes:
+      - backend:/app
+    cpus: 0.5
+    mem_limit: 512m
+    mem_reservation: 256m
+    memswap_limit: 512m # Когда memswap_limit == mem_limit, использование swap запрещено
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VUE_APP_API_URL: ${VUE_APP_API_URL:-/api}
+        NGINX_DOCKER_IMAGE_VERSION: ${NGINX_DOCKER_IMAGE_VERSION:-nginx:alpine-slim}
+        NODE_DOCKER_IMAGE_VERSION: ${NODE_DOCKER_IMAGE_VERSION:-node:16-alpine}
+    image: momo-frontend:${MOMO_FRONTEND_VERSION:-recent}
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    networks:
+      - main_network
+      - frontend
+    volumes:
+      - frontend:/usr/share
+    cpus: 0.5
+    mem_limit: 512m
+    mem_reservation: 256m
+    memswap_limit: 512m
+
+networks:
+  main_network:
+    driver: bridge
+  frontend:
+    driver: bridge
+    internal: true
+  backend:
+    driver: bridge
+    internal: true
+
+volumes:
+  backend:
+  frontend:

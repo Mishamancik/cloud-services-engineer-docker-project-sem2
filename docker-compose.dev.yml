@@ -1,0 +1,34 @@
+services:
+  backend:
+    image: momo-backend:${MOMO_BACKEND_VERSION:-recent}-dev
+    environment:
+      - NODE_ENV=development
+    networks:
+      - main_network_dev
+      - backend_dev
+    volumes:
+      - backend_dev:/app
+
+  frontend:
+    image: momo-frontend:${MOMO_FRONTEND_VERSION:-recent}-dev
+    environment:
+      - NODE_ENV=development
+    networks:
+      - main_network_dev
+      - frontend_dev
+    volumes:
+      - frontend_dev:/usr/share
+
+networks:
+  main_network_dev:
+    driver: bridge
+  frontend_dev:
+    driver: bridge
+    internal: true
+  backend_dev:
+    driver: bridge
+    internal: true
+
+volumes:
+  backend_dev:
+  frontend_dev:

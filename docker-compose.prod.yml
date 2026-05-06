@@ -1,0 +1,36 @@
+services:
+  backend:
+    image: momo-backend:${MOMO_BACKEND_VERSION:-recent}-prod
+    environment:
+      - NODE_ENV=production
+    restart: always
+    networks:
+      - main_network_prod
+      - backend_prod
+    volumes:
+      - backend_prod:/app
+
+  frontend:
+    image: momo-frontend:${MOMO_FRONTEND_VERSION:-recent}-prod
+    environment:
+      - NODE_ENV=production
+    restart: always
+    networks:
+      - main_network_prod
+      - frontend_prod
+    volumes:
+      - frontend_prod:/usr/share
+
+networks:
+  main_network_prod:
+    driver: bridge
+  frontend_prod:
+    driver: bridge
+    internal: true
+  backend_prod:
+    driver: bridge
+    internal: true
+
+volumes:
+  backend_prod:
+  frontend_prod:
