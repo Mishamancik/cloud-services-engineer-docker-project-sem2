@@ -303,7 +303,6 @@ volumes:
 secrets:
   db_connection:
     file: ${DB_CONNECTION_SECRET_FILE:-./db_connection_secret_example}
-
 ```
 
 </details>
