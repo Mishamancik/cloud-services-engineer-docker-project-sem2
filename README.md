@@ -2,7 +2,7 @@
 
 Проект контейнеризации приложения с использованием Docker и Docker Compose.
 
-![CI](https://github.com/Mishamancik/cloud-services-engineer-docker-project-sem2.git/actions/workflows/deploy.yaml/badge.svg)
+![CI](https://github.com/Mishamancik/cloud-services-engineer-docker-project-sem2/actions/workflows/deploy.yaml/badge.svg)
 
 ## Архитектура проекта
 Система состоит из двух сервисов:
@@ -192,28 +192,29 @@ momo-frontend:1.0.2   f2f18582879d       19.9MB             0B   U
 ### Конфигурируемость
 Чтобы конфигурировать backend-образ, достаточно отредактировать параметры в команде ниже. В ней можно изменить версию базового образа go и тег сборки.
 ```
-docker build --build-arg \
-GOLANG_DOCKER_IMAGE_VERSION="golang:1.17-alpine" \
+docker build \
+--build-arg GOLANG_DOCKER_IMAGE_VERSION="golang:1.17-alpine" \
 -t "backend:1.0.1" ./backend/
 ```
 
 Чтобы конфигурировать frontend-образ, достаточно отредактировать параметры в команде ниже. В ней можно изменить версию базового образа node и nginx, адрес api и тег сборки.
 ```
-docker build --build-arg \
-NODE_DOCKER_IMAGE_VERSION="node:16-alpine" \
-NGINX_DOCKER_IMAGE_VERSION="nginx:alpine-slim" \
-VUE_APP_API_URL="/api" \
--t "frontend:1.0.2" ./frontend/
+docker build \
+  --build-arg NODE_DOCKER_IMAGE_VERSION="node:16-alpine" \
+  --build-arg NGINX_DOCKER_IMAGE_VERSION="nginx:alpine-slim" \
+  --build-arg VUE_APP_API_URL="/api" \
+  -t frontend:1.0.2 \
+  ./frontend/
 ```
 
 ## Compose
 Основные особенности:
-- Настроена зависимость frontend от backend service healthy
+- Настроена зависимость frontend от backend service healthy (ждем backend, чтобы присылать ему API-запросы)
+- Используются healthchecks из Dockerfile
 - Настроены изолированные сети для сервисов и общая сеть для коммуникации
 - Настроены volumes для примера
 - Настроены профили для dev и prod
-- Реализовано горизонтальное масштабирование
-- Используются healthchecks из Dockerfile (отдельно в compose не описаны)
+- Реализовано горизонтальное масштабирование (балансировка запросов к backend через nginx во frontend)
 - Настроены ограничения ресурсов, политики перезапуска, права доступа, capabilities, security scanning, приведен пример docker secrets, read-only fs.
 
 <details closed>
@@ -246,6 +247,8 @@ services:
       - ALL
     security_opt:
       - no-new-privileges:true
+    secrets:
+      - db_connection
 
   frontend:
     build:
@@ -265,7 +268,12 @@ services:
     networks:
       - main_network
       - frontend
-    read_only: false
+    read_only: true
+    tmpfs:
+      - /var/cache/nginx:uid=1000,gid=1000,mode=0755 # нужно явно указать пользователя momo
+      - /var/run:uid=1000,gid=1000,mode=0755
+      - /run:uid=1000,gid=1000,mode=0755
+      - /tmp:uid=1000,gid=1000,mode=1777
     volumes:
       - frontend:/example_volume
     cpus: 0.5
@@ -294,7 +302,7 @@ volumes:
 
 secrets:
   db_connection:
-    file: ./db_connection_secret_example
+    file: ./db_connection_secret
 ```
 
 </details>
@@ -314,7 +322,7 @@ VUE_APP_API_URL="/api"
 ```
 
 ### Горизонтальное масштабирование
-Для горизотального масштабирования подходит только stateless backend, так как для frontend просто собираются статичные файлы. Для runtime во frontend используется nginx, который работает как точка входа и обеспечивает балансировку запросов к множественным backend-инстансам.
+Для горизотального масштабирования подходит только stateless backend, так как для frontend просто собираются статичные файлы. Для runtime во frontend используется nginx, который работает как точка входа и обеспечивает балансировку запросов к множественным backend-инстансам. Backend-сервис не имеет закрепленного порта на хосте (это нужно для корретного масштабирования). 
 
 Чтобы масштабировать backend, используйте соответствующий флаг в команде запуска:
 ``` 
@@ -506,12 +514,17 @@ Legend:
 [WARN]       * Container running with root FS mounted R/W: momo-frontend-1
 [WARN]       * PIDs limit not set: momo-backend-1
 [WARN]       * PIDs limit not set: momo-frontend-1
-[WARN]       * Port being bound to wildcard IP: 0.0.0.0 in momo-frontend-1
 [WARN]       * Privileges not restricted: momo-backend-1
 [WARN]       * Privileges not restricted: momo-frontend-1
 [WARN]      * No SecurityOptions Found: momo-backend-1
 [WARN]      * No SecurityOptions Found: momo-frontend-1
 ```
 
-### Ограничение capabilities контейнеров
-В официальном образе nginx privilleged-порты доступны всем пользователям (а не только root). Поэтому capability NET_BIND_SERVICE контейнеру с пользователем momo не требуется. В итоге у обоих контейнеров можно забрать capabilities, а контейнеру с go можно включить read-only fs.
+### Security hardening
+В официальном образе nginx privilleged-порты доступны всем пользователям (а не только root). Поэтому capability NET_BIND_SERVICE контейнеру с пользователем momo не требуется. В итоге у обоих контейнеров можно забрать все capabilities.
+
+Контейнеру с go можно включить read-only fs. Для read-only nginx потребовалось создать tmpfs в тех местах, где контейнеру нужно писать данные, и явно указать владельца momo с правами. 
+
+Для backend настроено монтирование Docker Secret в `/run/secrets/db_connection`.
+
+Контейнерам установлены лимиты по cpu, memory, swap, PIDs, 

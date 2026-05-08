@@ -22,4 +22,4 @@ vendor/
 .env
 
 # credentials for docker secrets
-db_connection_secret_example
+db_connection_secret
