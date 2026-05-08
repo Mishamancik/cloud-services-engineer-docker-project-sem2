@@ -12,12 +12,18 @@ services:
     networks:
       - main_network
       - backend
+    read_only: true
     volumes:
-      - backend:/app
+      - backend:/example_volume
     cpus: 0.5
     mem_limit: 512m
     mem_reservation: 256m
     memswap_limit: 512m # Когда memswap_limit == mem_limit, использование swap запрещено
+    pids_limit: 200
+    cap_drop: 
+      - ALL
+    security_opt:
+      - no-new-privileges:true
 
   frontend:
     build:
@@ -37,12 +43,18 @@ services:
     networks:
       - main_network
       - frontend
+    read_only: false
     volumes:
-      - frontend:/usr/share
+      - frontend:/example_volume
     cpus: 0.5
     mem_limit: 512m
     mem_reservation: 256m
     memswap_limit: 512m
+    pids_limit: 200
+    cap_drop: 
+      - ALL
+    security_opt:
+      - no-new-privileges:true
 
 networks:
   main_network:
@@ -57,3 +69,7 @@ networks:
 volumes:
   backend:
   frontend:
+
+secrets:
+  db_connection:
+    file: ./db_connection_secret_example
