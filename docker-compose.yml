@@ -79,4 +79,4 @@ volumes:
 
 secrets:
   db_connection:
-    file: ./db_connection_secret
+    file: ${DB_CONNECTION_SECRET_FILE:-./db_connection_secret_example}
