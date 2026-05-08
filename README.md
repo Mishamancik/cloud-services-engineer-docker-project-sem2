@@ -2,7 +2,7 @@
 
 Проект контейнеризации приложения с использованием Docker и Docker Compose.
 
-![CI](https://github.com/Mishamancik/cloud-services-engineer-docker-project-sem2.git/actions/workflows/deploy.yaml/badge.svg)
+![CI](https://github.com/Mishamancik/cloud-services-engineer-docker-project-sem2/actions/workflows/deploy.yaml/badge.svg)
 
 ## Архитектура проекта
 Система состоит из двух сервисов:
@@ -506,7 +506,6 @@ Legend:
 [WARN]       * Container running with root FS mounted R/W: momo-frontend-1
 [WARN]       * PIDs limit not set: momo-backend-1
 [WARN]       * PIDs limit not set: momo-frontend-1
-[WARN]       * Port being bound to wildcard IP: 0.0.0.0 in momo-frontend-1
 [WARN]       * Privileges not restricted: momo-backend-1
 [WARN]       * Privileges not restricted: momo-frontend-1
 [WARN]      * No SecurityOptions Found: momo-backend-1
