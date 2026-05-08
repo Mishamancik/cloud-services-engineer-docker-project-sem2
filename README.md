@@ -192,18 +192,19 @@ momo-frontend:1.0.2   f2f18582879d       19.9MB             0B   U
 ### Конфигурируемость
 Чтобы конфигурировать backend-образ, достаточно отредактировать параметры в команде ниже. В ней можно изменить версию базового образа go и тег сборки.
 ```
-docker build --build-arg \
-GOLANG_DOCKER_IMAGE_VERSION="golang:1.17-alpine" \
+docker build \
+--build-arg GOLANG_DOCKER_IMAGE_VERSION="golang:1.17-alpine" \
 -t "backend:1.0.1" ./backend/
 ```
 
 Чтобы конфигурировать frontend-образ, достаточно отредактировать параметры в команде ниже. В ней можно изменить версию базового образа node и nginx, адрес api и тег сборки.
 ```
-docker build --build-arg \
-NODE_DOCKER_IMAGE_VERSION="node:16-alpine" \
-NGINX_DOCKER_IMAGE_VERSION="nginx:alpine-slim" \
-VUE_APP_API_URL="/api" \
--t "frontend:1.0.2" ./frontend/
+docker build \
+  --build-arg NODE_DOCKER_IMAGE_VERSION="node:16-alpine" \
+  --build-arg NGINX_DOCKER_IMAGE_VERSION="nginx:alpine-slim" \
+  --build-arg VUE_APP_API_URL="/api" \
+  -t frontend:1.0.2 \
+  ./frontend/
 ```
 
 ## Compose
@@ -246,6 +247,8 @@ services:
       - ALL
     security_opt:
       - no-new-privileges:true
+    secrets:
+      - db_connection
 
   frontend:
     build:
@@ -265,7 +268,12 @@ services:
     networks:
       - main_network
       - frontend
-    read_only: false
+    read_only: true
+    tmpfs:
+      - /var/cache/nginx:uid=1000,gid=1000,mode=0755 # нужно явно указать пользователя momo
+      - /var/run:uid=1000,gid=1000,mode=0755
+      - /run:uid=1000,gid=1000,mode=0755
+      - /tmp:uid=1000,gid=1000,mode=1777
     volumes:
       - frontend:/example_volume
     cpus: 0.5
@@ -518,3 +526,5 @@ Legend:
 Контейнеру с go можно включить read-only fs. Для read-only nginx потребовалось создать tmpfs в тех местах, где контейнеру нужно писать данные, и явно указать владельца momo с правами. 
 
 Для backend настроено монтирование Docker Secret в `/run/secrets/db_connection`.
+
+Контейнерам установлены лимиты по cpu, memory, swap, PIDs, 
