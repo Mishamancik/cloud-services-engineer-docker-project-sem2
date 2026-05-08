@@ -24,6 +24,8 @@ services:
       - ALL
     security_opt:
       - no-new-privileges:true
+    secrets:
+      - db_connection
 
   frontend:
     build:
@@ -77,4 +79,4 @@ volumes:
 
 secrets:
   db_connection:
-    file: ./db_connection_secret_example
+    file: ./db_connection_secret

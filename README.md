@@ -294,7 +294,7 @@ volumes:
 
 secrets:
   db_connection:
-    file: ./db_connection_secret_example
+    file: ./db_connection_secret
 ```
 
 </details>
@@ -517,3 +517,5 @@ Legend:
 В официальном образе nginx privilleged-порты доступны всем пользователям (а не только root). Поэтому capability NET_BIND_SERVICE контейнеру с пользователем momo не требуется. В итоге у обоих контейнеров можно забрать все capabilities.
 
 Контейнеру с go можно включить read-only fs. Для read-only nginx потребовалось создать tmpfs в тех местах, где контейнеру нужно писать данные, и явно указать владельца momo с правами. 
+
+Для backend настроено монтирование Docker Secret в `/run/secrets/db_connection`.
