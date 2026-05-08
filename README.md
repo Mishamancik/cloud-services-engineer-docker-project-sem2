@@ -302,7 +302,7 @@ volumes:
 
 secrets:
   db_connection:
-    file: ./db_connection_secret
+    file: ${DB_CONNECTION_SECRET_FILE:-./db_connection_secret_example}
 ```
 
 </details>
@@ -311,11 +311,12 @@ secrets:
 Для конфигурации приложения скопируйте содержние .env.example в .env рядом с compose-файлом и измените необходимые параметры.
 ```
 # Backend
-MOMO_BACKEND_VERSION="4.0.1"
-GOLANG_DOCKER_IMAGE_VERSION="golang:1.17-alpine"
+MOMO_BACKEND_VERSION="1.0.1"
+GOLANG_DOCKER_IMAGE_VERSION="golang:1.26-alpine"
+DB_CONNECTION_SECRET_FILE="./db_connection_secret_example"
 
 # Frontend
-MOMO_FRONTEND_VERSION="4.0.2"
+MOMO_FRONTEND_VERSION="1.0.2"
 NODE_DOCKER_IMAGE_VERSION="node:16-alpine"
 NGINX_DOCKER_IMAGE_VERSION="nginx:alpine-slim"
 VUE_APP_API_URL="/api"
@@ -525,6 +526,6 @@ Legend:
 
 Контейнеру с go можно включить read-only fs. Для read-only nginx потребовалось создать tmpfs в тех местах, где контейнеру нужно писать данные, и явно указать владельца momo с правами. 
 
-Для backend настроено монтирование Docker Secret в `/run/secrets/db_connection`.
+Для backend настроено монтирование Docker Secret в `/run/secrets/db_connection`. Путь к файлу с секретом назначается переменной окружения в `.env`, в качестве примера используется `db_connection_secret_example`.
 
-Контейнерам установлены лимиты по cpu, memory, swap, PIDs, 
+Контейнерам установлены лимиты по cpu, memory, swap, PIDs.
