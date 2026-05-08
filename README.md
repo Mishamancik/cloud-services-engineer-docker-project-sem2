@@ -513,5 +513,7 @@ Legend:
 [WARN]      * No SecurityOptions Found: momo-frontend-1
 ```
 
-### Ограничение capabilities контейнеров
-В официальном образе nginx privilleged-порты доступны всем пользователям (а не только root). Поэтому capability NET_BIND_SERVICE контейнеру с пользователем momo не требуется. В итоге у обоих контейнеров можно забрать capabilities, а контейнеру с go можно включить read-only fs.
+### Security hardening
+В официальном образе nginx privilleged-порты доступны всем пользователям (а не только root). Поэтому capability NET_BIND_SERVICE контейнеру с пользователем momo не требуется. В итоге у обоих контейнеров можно забрать все capabilities.
+
+Контейнеру с go можно включить read-only fs. Для read-only nginx потребовалось создать tmpfs в тех местах, где контейнеру нужно писать данные, и явно указать владельца momo с правами. 
